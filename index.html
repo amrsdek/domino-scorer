@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#1a0f0a">
+    <title>عشرة دومانة في السريع - ع-ص</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/svg+xml" href="domino-icon.svg">
+    <link rel="apple-touch-icon" href="domino-icon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&family=Amiri:wght@400;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div id="app" class="app-container">
+
+        <!-- Header -->
+        <header class="app-header">
+            <h1 class="logo-text">عشرة دومانة</h1>
+        </header>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+
+            <!-- Home View -->
+            <section id="view-home" class="view active">
+                <div class="menu-grid">
+                    <button class="btn btn-primary btn-large" onclick="app.navigate('setup')">
+                        <span class="icon">🏆</span> طاولة جديدة
+                    </button>
+                    <button class="btn btn-secondary" onclick="app.navigate('bank')">
+                        <span class="icon">👥</span> الشلة (اللاعبين)
+                    </button>
+                    <button class="btn btn-secondary" onclick="app.navigate('leaderboard')">
+                        <span class="icon">📜</span> لوحة الشرف
+                    </button>
+                    <button class="btn btn-secondary" onclick="app.navigate('settings')">
+                        <span class="icon">⚙️</span> الإعدادات
+                    </button>
+                </div>
+            </section>
+
+            <!-- Player Bank View -->
+            <section id="view-bank" class="view hidden">
+                <div class="view-header">
+                    <h2>الشلة</h2>
+                    <button class="btn-icon" onclick="app.navigate('home')">🔙</button>
+                </div>
+                <div class="add-player-form">
+                    <input type="text" id="new-player-name" placeholder="اسم اللاعب الجديد..." maxlength="15">
+                    <button class="btn btn-primary" onclick="app.addPlayer()">أضف</button>
+                </div>
+                <ul id="player-list" class="list-container">
+                    <!-- Populated by JS -->
+                </ul>
+            </section>
+
+            <!-- Game Setup View -->
+            <section id="view-setup" class="view hidden">
+                <div class="view-header">
+                    <h2>اختر اللعيبة (٢-٤)</h2>
+                    <button class="btn-icon" onclick="app.navigate('home')">🔙</button>
+                </div>
+                <p class="hint">حدد من سيلعب هذه الجولة:</p>
+                <div id="setup-player-list" class="selectable-list">
+                    <!-- Populated by JS -->
+                </div>
+                <button class="btn btn-primary btn-large start-btn" onclick="app.startGame()" id="btn-start-game"
+                    disabled>ابتدئ اللعب</button>
+            </section>
+
+            <!-- Game View -->
+            <section id="view-game" class="view hidden">
+                <div class="game-header">
+                    <button class="btn-icon btn-small" onclick="app.undoLastAction()">↩️ تراجع</button>
+                    <div class="target-score">الهدف: ١٠١</div>
+                    <button class="btn-icon btn-small" onclick="app.endGameConfirm()">🛑 إنهاء</button>
+                </div>
+
+                <div id="scoreboard" class="scoreboard">
+                    <!-- Populated dynamically based on 2,3,4 players -->
+                </div>
+
+                <!-- Action Pad -->
+                <div class="action-pad">
+                    <div class="numpad">
+                        <button class="btn-num" onclick="app.inputNumber(1)">١</button>
+                        <button class="btn-num" onclick="app.inputNumber(2)">٢</button>
+                        <button class="btn-num" onclick="app.inputNumber(3)">٣</button>
+                        <button class="btn-num" onclick="app.inputNumber(4)">٤</button>
+                        <button class="btn-num" onclick="app.inputNumber(5)">٥</button>
+                        <button class="btn-num" onclick="app.inputNumber(6)">٦</button>
+                        <button class="btn-num" onclick="app.inputNumber(7)">٧</button>
+                        <button class="btn-num" onclick="app.inputNumber(8)">٨</button>
+                        <button class="btn-num" onclick="app.inputNumber(9)">٩</button>
+                        <button class="btn-num btn-zero" onclick="app.inputNumber(0)">٠</button>
+                        <button class="btn-num btn-clear" onclick="app.clearInput()">مسح</button>
+                    </div>
+                    <div class="player-select-actions" id="game-player-actions">
+                        <!-- Buttons to assign the input score to a player -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Leaderboard View -->
+            <section id="view-leaderboard" class="view hidden">
+                <div class="view-header">
+                    <h2>لوحة الشرف</h2>
+                    <button class="btn-icon" onclick="app.navigate('home')">🔙</button>
+                </div>
+                <div class="table-container">
+                    <table class="leaderboard-table">
+                        <thead>
+                            <tr>
+                                <th>اللاعب</th>
+                                <th>فوز 🏆</th>
+                                <th>خسارة ❌</th>
+                            </tr>
+                        </thead>
+                        <tbody id="leaderboard-body">
+                            <!-- Populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Settings View -->
+            <section id="view-settings" class="view hidden">
+                <div class="view-header">
+                    <h2>الإعدادات</h2>
+                    <button class="btn-icon" onclick="app.navigate('home')">🔙</button>
+                </div>
+                <div class="settings-list">
+                    <div class="setting-item">
+                        <label for="wake-lock-toggle">منع إغلاق الشاشة (Wake Lock)</label>
+                        <input type="checkbox" id="wake-lock-toggle" onchange="app.toggleWakeLockSetting(this.checked)">
+                    </div>
+
+                    <hr class="vintage-hr">
+
+                    <button class="btn btn-secondary" onclick="app.exportData()">💾 تصدير كملف JSON</button>
+
+                    <div class="import-wrapper">
+                        <label for="import-file" class="btn btn-secondary" style="display:block; text-align:center;">📂
+                            استيراد بيانات</label>
+                        <input type="file" id="import-file" accept=".json" onchange="app.importData(event)"
+                            style="display: none;">
+                    </div>
+
+                    <hr class="vintage-hr">
+
+                    <button class="btn btn-danger" onclick="app.factoryResetConfirm()">⚠️ حذف جميع البيانات</button>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Modals -->
+    <div id="modal-overlay" class="modal-overlay hidden">
+        <div class="modal">
+            <h3 id="modal-title">تنبيه</h3>
+            <p id="modal-message">رسالة التطبيق</p>
+            <div class="modal-actions" id="modal-actions">
+                <button class="btn btn-primary" onclick="app.closeModal()">حسناً</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
